@@ -11,7 +11,11 @@ def main():
     ResourseManager.load_base_settings_for_window(window)
 
     #Создаем холст
-    canvas = Canvas(window, width=800, height=600, bg='black')#Переделать по нормальному
+    canvas = Canvas(
+                    window, width=ResourseManager.get_window_geometry('width'),
+                    height=ResourseManager.get_window_geometry('heigth'),
+                    bg='black'
+                    )
     canvas.pack()
 
     window.mainloop()

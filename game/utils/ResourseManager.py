@@ -1,10 +1,13 @@
-from logging import exception
-from tkinter import *
+#from logging import exception
+#from tkinter import *
 from configparser import ConfigParser
 import os
 
 
 class ResourseManager:
+    """
+    Класс для подгрузки базовых настроек окна
+    """
 
     @classmethod
     def __get_config_settings(cls) -> None:
