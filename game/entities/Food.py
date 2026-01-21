@@ -1,20 +1,22 @@
 from random import randint
-from game.utils.ResourseManager import ResourseManager
+from game.utils.ResourseManager import Resourses
 
 
 class Food:
 
     def __init__(self, canvas)->None:
 
+        Resourses.from_config_file()
+
         #Получение информации о размере поля
-        self.width = ResourseManager.get_settings('width')
-        self.height = ResourseManager.get_settings('height')
+        self.width = Resourses.width
+        self.height = Resourses.height
 
         # Получение информации о размере клетки
-        self.space_size = ResourseManager.get_settings('space_size')
+        self.space_size = Resourses.space_size
 
         #Получение информации о еде
-        self.color_food = ResourseManager.get_settings('food_color')
+        self.color_food = Resourses.food_color
 
 
         self.begin_x = randint(0, (self.width // self.space_size) - 1) * self.space_size

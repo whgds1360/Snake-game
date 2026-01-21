@@ -1,7 +1,9 @@
 from tkinter import *
 #from tkinter import messagebox
-from utils.ResourseManager import ResourseManager
+from utils.ResourseManager import ResourseManager, Resourses
 from entities.Food import Food
+from entities.Snake import Snake
+from utils.Move import move
 
 
 def main():
@@ -14,14 +16,21 @@ def main():
     #Создаем холст (Игровое поле)
     canvas = Canvas(
                     window,
-                    width=ResourseManager.get_settings('width'),
-                    height=ResourseManager.get_settings('height'),
+                    width=Resourses.width,
+                    height=Resourses.height,
                     bg='black'
                     )
     canvas.pack()
 
+    #отрисовка змеи
+    snake = Snake(canvas)
+
     #Отрисовка еды
     food = Food(canvas)
+
+    #движение змеи
+    move(window=window, canvas=canvas, snake=snake, food=food, direction='down')
+    window.mainloop()
 
     window.mainloop()
 

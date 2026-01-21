@@ -1,98 +1,81 @@
 from configparser import ConfigParser
 from os.path import exists, join
 from os import getcwd
+from dataclasses import dataclass, field
+#from typing import Optional для совместимости со старыми версиями python
+
+
+@dataclass
+class Resourses:
+    """Получение базовых настроек"""
+    # Базовые настройки окна
+    width: int = 1024
+    height: int = 768
+    resizable: bool = False
+    title: str = "Snake Game"
+    icon_path: str = join('assets', 'icon', 'app_icon.ico')
+
+    # Настройки игрового поля
+    space_size: int | None = 25
+    food_color: str | None = 'red'
+
+    # Служебные поля (не будут включаться в __init__)
+    __name_config_file: str = field(default='config.ini', repr=False, init=False)
+
+    @classmethod
+    def from_config_file(cls, config_file: str = 'config.ini') -> 'Resourses':
+        """Создать конфигурацию из файла"""
+        config_parser = ConfigParser()
+
+        # Проверка существования файла
+        if not exists(config_file):
+            print(f'Файл конфига {config_file} не найден')
+            print(f'Текущая директория {getcwd()}')
+            return cls()  # Возвращаем конфиг со значениями по умолчанию
+
+        # Чтение конфига
+        try:
+            config_parser.read(config_file, encoding='utf-8')
+        except Exception:
+            config_parser.read(config_file)
+
+        # Отладочная печать
+        if 'Base settings window' in config_parser:
+            print("📋 Найдены ключи:", list(config_parser['Base settings window'].keys()))
+
+        if 'Game place settings' in config_parser:
+            print("📋 Найдены ключи:", list(config_parser['Game place settings'].keys()))
+
+        # Путь до иконки
+        path_icon = join('assets', 'icon', 'app_icon.ico')
+        if not exists(path_icon):
+            print('Иконка не найдена')
+            print(f'Путь поиска: {path_icon}')
+
+        # Извлечение значений
+        base_settings = dict(config_parser.items('Base settings window'))  # как словарь
+        place_settings = dict(config_parser.items('Game place settings'))  # как словарь
+
+        return cls(
+            width=int(base_settings.get('width', 1280)),
+            height=int(base_settings.get('height', 800)),
+            resizable=base_settings.get('resizable', 'False') == 'True',
+            title=base_settings.get('title', 'Snake Game'),
+            space_size=int(place_settings.get('space_size', 25)),
+            food_color=base_settings.get('food_color', 'red'),
+            icon_path =place_settings.get('path_icon', path_icon)
+        )
 
 
 class ResourseManager:
     """
     Класс для подгрузки базовых настроек окна и настроек игрового поля
     """
+    @staticmethod
+    def load_base_settings_for_window(window) -> None:
+        base_settings = Resourses.from_config_file()
 
-
-    @classmethod
-    def __get_config_settings(cls) -> None:
-        config = ConfigParser()
-
-        #Логирование ошибки при отсутствии пути
-        if not exists('config.ini'):
-            print('Файл конфига config.ini не найден')
-            print(f'Текущая директория {getcwd()}')
-
-        #Решение проблемы с кодировкой
-        try:
-            config.read('config.ini', encoding='utf-8')
-        except Exception:
-            config.read('config.ini')
-
-        #Отладочная печать
-        if 'Base settings window' in config:
-            print("📋 Найдены ключи:", list(config['Base settings window'].keys()))
-
-        if 'Game place settings' in config:
-            print("📋 Найдены ключи:", list(config['Game place settings'].keys()))
-
-        try:
-            cls._width = int(config['Base settings window']['width'])
-        except Exception as error:
-            cls._width = 1280  # Значение по умолчанию
-            print(f"Возникла ошибка {error}")
-
-        try:
-            cls._height = int(config['Base settings window']['height'])
-        except Exception as error:
-            cls._height = 800  # Значение по умолчанию
-            print(f"Возникла ошибка {error}")
-
-        try:
-            _resizable = str(config['Base settings window']['resizable'])
-            cls._resizable = True if _resizable == 'True' else False
-        except Exception as error:
-            cls._resizable = False
-            print(f"Возникла ошибка {error}")
-
-        try:
-            cls._title = str(config['Base settings window']['title'])
-        except Exception as error:
-            cls._title = "Snake Game"
-            print(f"Возникла ошибка {error}")
-
-        #Настройки для игрового поля
-        try:
-            cls._space_size = int(config['Game place settings']['space_size'])
-        except Exception as error:
-            print(f"Возникла ошибка {error}")
-
-        #Цвет еды
-        try:
-            cls._food_color = str(config['Game place settings']['food_color'])
-        except Exception as error:
-            print(f"Возникла ошибка {error}")
-
-
-    @classmethod
-    def load_base_settings_for_window(cls, window) -> None:
-        cls.__get_config_settings()
-
-        #Путь до иконки
-        path_icon = join('assets', 'icon', 'app_icon.ico')
-        if not exists(path_icon):
-            print('Иконка не найдена')
-            print(f'Путь поиска: {path_icon}')
-
-
-        window.geometry(f"{cls._width}x{cls._height}")
-        window.resizable(cls._resizable, cls._resizable)
-        window.title(cls._title)
-        window.iconbitmap(path_icon)
-
-
-    @classmethod
-    def get_settings(cls, tag:str) -> int|str|None:
-        cls.__get_config_settings()
-
-        match tag:
-            case 'width': return cls._width
-            case 'height': return cls._height
-            case 'space_size': return cls._space_size
-            case 'food_color': return cls._food_color
-            case _ : return None
+        window.geometry(f"{base_settings.width}x{base_settings.height}")
+        window.resizable(base_settings.resizable, base_settings.resizable)
+        window.title(base_settings.title)
+        window.iconbitmap(base_settings.icon_path)
