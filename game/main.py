@@ -3,7 +3,7 @@ from tkinter import *
 from utils.ResourseManager import ResourseManager, Resourses
 from entities.Food import Food
 from entities.Snake import Snake
-from utils.Move import move
+from utils.Move import Move
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
                     window,
                     width=Resourses.width,
                     height=Resourses.height,
-                    bg='black'
+                    bg='black' #Убрать литерал
                     )
     canvas.pack()
 
@@ -28,9 +28,12 @@ def main():
     #Отрисовка еды
     food = Food(canvas)
 
-    #движение змеи
-    move(window=window, canvas=canvas, snake=snake, food=food, direction='down')
-    window.mainloop()
+    #Привязка обработчика к основному окну
+    window.bind('<Key>', Move.button_handler)
+
+    #Движение змеи
+    Move.move(window=window, canvas=canvas, snake=snake)
+
 
     window.mainloop()
 

@@ -2,7 +2,7 @@ from configparser import ConfigParser
 from os.path import exists, join
 from os import getcwd
 from dataclasses import dataclass, field
-#from typing import Optional для совместимости со старыми версиями python
+#from typing import Optional
 
 
 @dataclass
@@ -16,10 +16,10 @@ class Resourses:
     icon_path: str = join('assets', 'icon', 'app_icon.ico')
 
     # Настройки игрового поля
-    space_size: int | None = 25
-    food_color: str | None = 'red'
+    space_size: int = 25
+    food_color: str = 'red'
 
-    # Служебные поля (не будут включаться в __init__)
+    # Служебное поле (не будут включаться в __init__)
     __name_config_file: str = field(default='config.ini', repr=False, init=False)
 
     @classmethod
@@ -57,8 +57,8 @@ class Resourses:
         place_settings = dict(config_parser.items('Game place settings'))  # как словарь
 
         return cls(
-            width=int(base_settings.get('width', 1280)),
-            height=int(base_settings.get('height', 800)),
+            width=int(base_settings.get('width', 1024)),
+            height=int(base_settings.get('height', 768)),
             resizable=base_settings.get('resizable', 'False') == 'True',
             title=base_settings.get('title', 'Snake Game'),
             space_size=int(place_settings.get('space_size', 25)),

@@ -1,36 +1,65 @@
 from game.utils.ResourseManager import Resourses
+from typing import Optional
 
 
-def move(window, canvas, snake, food, direction: str) -> None:
-    # Получаем текущие координаты головы
-    x, y = snake.coord[0]
+class Move:
 
-    # Обновляем координаты в зависимости от направления
-    if direction == 'down':
-        y += Resourses.space_size or 20
-    elif direction == 'up':
-        y -= Resourses.space_size or 20
-    elif direction == 'left':
-        x -= Resourses.space_size or 20
-    elif direction == 'right':
-        x += Resourses.space_size or 20
+    current_direction:Optional[str] = 'Down'
 
-    # Добавляем новую голову
-    snake.coord.insert(0, [x, y])
+    @classmethod
+    def button_handler(cls, event) -> None:
+        """
+        Метод меняет направление змеи взависимости от нажатой кнопки
+        """
+        #Отладочная печать
+        print(f'Нажата клавиша: {event.keysym}')
 
-    # Рисуем новый сегмент
-    square = canvas.create_rectangle(
-        x, y,
-        x + Resourses.space_size,
-        y + Resourses.space_size,
-        fill="green"
-    )
-    snake.squares.insert(0, square)
 
-    # Удаляем хвост
-    del snake.coord[-1]
-    canvas.delete(snake.squares[-1])
-    del snake.squares[-1]
+        if event.keysym == 'Right':
+            cls.current_direction = 'Right'
+        elif event.keysym == 'Left':
+            cls.current_direction = 'Left'
+        elif event.keysym == 'Up':
+            cls.current_direction = 'Up'
+        elif event.keysym == 'Down':
+            cls.current_direction = 'Down'
 
-    #Задержка игры
-    window.after(100, move, window, canvas, snake, food, direction)
+
+
+    @classmethod
+    def move(cls, window, canvas, snake) -> None:
+        """
+        Основной метод движения змеи
+        """
+        direction = cls.current_direction
+
+        # Получаем текущие координаты головы
+        x, y = snake.coord[0]
+
+        # Обновляем координаты в зависимости от направления
+        if direction == 'Down':
+            y += Resourses.space_size
+        elif direction == 'Up':
+            y -= Resourses.space_size
+        elif direction == 'Left':
+            x -= Resourses.space_size
+        elif direction == 'Right':
+            x += Resourses.space_size
+
+        snake.coord.insert(0, [x, y])
+
+        # Рисуем новый сегмент
+        square = canvas.create_rectangle(
+            x, y,
+            x + Resourses.space_size,
+            y + Resourses.space_size,
+            fill="green" #убрать литерал
+        )
+        snake.squares.insert(0, square)
+
+        # Удаляем хвост
+        del snake.coord[-1]
+        canvas.delete(snake.squares[-1])
+        del snake.squares[-1]
+
+        window.after(200, Move.move, window, canvas, snake) #переделать без литерала
