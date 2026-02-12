@@ -11,14 +11,14 @@ def main():
     window = Tk()
 
     #Подгрузка настроек для змеи и еды
-    settings = Resources.from_config_file()
+    settings:'Resources' = Resources.from_config_file()
 
     #Подгрузка базовых настроек
     ResourcesManager.load_base_settings_for_window(window=window, base_settings=settings)
 
     #Создаем холст (Игровое поле)
     canvas = Canvas(
-                    window,
+                    master=window,
                     width=settings.width,
                     height=settings.height,
                     bg="black" #TODO: убрать литерал!!!
@@ -26,10 +26,10 @@ def main():
     canvas.pack()
 
     #Отрисовка змеи
-    snake = Snake(canvas=canvas, settings=settings)
+    snake:'Snake' = Snake(canvas=canvas, settings=settings)
 
     #Отрисовка еды
-    food = Food(canvas=canvas, settings=settings)
+    food:'Food' = Food(canvas=canvas, settings=settings)
 
     #Привязка обработчика к основному окну
     window.bind(sequence="<Key>", func=Move.button_handler)

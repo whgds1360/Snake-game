@@ -29,7 +29,7 @@ class Move:
         """
         Основной метод движения змеи, который занимается отрисовкой новых сегментов
         """
-        direction = cls.current_direction
+        direction:Optional[str] = cls.current_direction
 
         # Получаем текущие координаты головы
         x, y = snake.coord[0]

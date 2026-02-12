@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from dataclasses import dataclass, field
-from typing import final, Final, ClassVar, Optional
+from typing import final, Final, ClassVar, Optional, Dict
 from pathlib import Path
 
 
@@ -29,9 +29,9 @@ class Resources:
     @classmethod
     def from_config_file(cls, config_file: Optional[str] = DEFAULT_CONFIG_NAME) -> "Resources":
         """Создать конфигурацию из файла"""
-        config_parser = ConfigParser()
+        config_parser:"ConfigParser" = ConfigParser()
 
-        config_path = Path(config_file)
+        config_path:"Path" = Path(config_file)
         # Проверка существования файла
         if not config_path.exists():
             print(f"Файл конфига {config_path} не найден")
@@ -59,15 +59,15 @@ class Resources:
             print("📋 Найдены ключи:", list(config_parser["Game place settings"].keys()))
 
         # Путь до иконки
-        path_icon = Path("assets", "icon", "app_icon.ico")
+        path_icon:"Path" = Path("assets", "icon", "app_icon.ico")
         if not path_icon.exists():
             print("Иконка не найдена")
             print(f"Путь поиска: {path_icon}")
 
         # Извлечение значений
-        base_settings = dict(config_parser.items("Settings window"))  # как словарь
-        game_settings = dict(config_parser.items("Gameplay settings")) # как словарь
-        place_settings = dict(config_parser.items("Game place settings"))  # как словарь
+        base_settings:Dict[str, str] = dict(config_parser.items("Settings window"))  # как словарь
+        game_settings:Dict[str, str] = dict(config_parser.items("Gameplay settings")) # как словарь
+        place_settings:Dict[str, str] = dict(config_parser.items("Game place settings"))  # как словарь
 
         return cls(
             # Базовые настройки окна
