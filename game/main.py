@@ -1,3 +1,4 @@
+from __future__ import annotations
 from tkinter import Tk, Canvas #messagebox
 #from tkinter import Label, Button
 from utils.ResourseManager import ResourcesManager, Resources
@@ -11,7 +12,7 @@ def main():
     window = Tk()
 
     #Подгрузка настроек для змеи и еды
-    settings:'Resources' = Resources.from_config_file()
+    settings:Resources = Resources.from_config_file()
 
     #Подгрузка базовых настроек
     ResourcesManager.load_base_settings_for_window(window=window, base_settings=settings)
@@ -26,10 +27,10 @@ def main():
     canvas.pack()
 
     #Отрисовка змеи
-    snake:'Snake' = Snake(canvas=canvas, settings=settings)
+    snake:Snake = Snake(canvas=canvas, settings=settings)
 
     #Отрисовка еды
-    food:'Food' = Food(canvas=canvas, settings=settings)
+    food:Food = Food(canvas=canvas, settings=settings)
 
     #Привязка обработчика к основному окну
     window.bind(sequence="<Key>", func=Move.button_handler)

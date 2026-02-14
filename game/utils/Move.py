@@ -15,13 +15,28 @@ class Move:
         print(f"Нажата клавиша: {event.keysym}")
 
         if event.keysym == "Right":
-            cls.current_direction = "Right"
+            if cls.current_direction == "Left":
+                pass
+            else:
+                cls.current_direction = "Right"
+
         elif event.keysym == "Left":
-            cls.current_direction = "Left"
+            if cls.current_direction == "Right":
+                pass
+            else:
+                cls.current_direction = "Left"
+
         elif event.keysym == "Up":
-            cls.current_direction = "Up"
+            if cls.current_direction == "Down":
+                pass
+            else:
+                cls.current_direction = "Up"
+
         elif event.keysym == "Down":
-            cls.current_direction = "Down"
+            if cls.current_direction == "Up":
+                pass
+            else:
+                cls.current_direction = "Down"
 
 
     @classmethod

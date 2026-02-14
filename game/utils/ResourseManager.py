@@ -1,37 +1,58 @@
+from __future__ import annotations
 from configparser import ConfigParser
-from dataclasses import dataclass, field
-from typing import final, Final, ClassVar, Optional, Dict
+from typing import final, Final, ClassVar, Dict
 from pathlib import Path
+from pydantic import BaseModel, field_validator, Field
 
 
 @final
-@dataclass
-class Resources:
+class Resources(BaseModel):
     """Получение базовых настроек"""
     #Константы
     DEFAULT_CONFIG_NAME:ClassVar[Final[str]] = "Config.ini"
 
     # Базовые настройки окна
-    width: int = field(default=1024, repr=True, init=True)
-    height: int = field(default=768, repr=True, init=True)
-    resizable: bool = field(default=False, repr=True, init=True)
-    title: str = field(default="Snake Game", repr=True, init=True)
-    icon_path: str = field(default=Path("assets", "icon", "app_icon.ico"), repr=True, init=True)
+    width: int = Field(default=1024, repr=True, init=True)
+    height: int = Field(default=768, repr=True, init=True)
+    resizable: bool = Field(default=False, repr=True, init=True)
+    title: str = Field(default="Snake Game", repr=True, init=True)
+    icon_path: str = Field(default=Path("assets", "icon", "app_icon.ico"), repr=True, init=True)
 
     # Базовые настройки игры
-    snake_color: str = field(default="green", repr=True, init=True)
-    food_color: str = field(default="red", repr=True, init=True)
-    delay: int = field(default="200", repr=True, init=True)
+    snake_color: str = Field(default="green", repr=True, init=True)
+    food_color: str = Field(default="red", repr=True, init=True)
+    delay: int = Field(default=200, repr=True, init=True)
 
     # Настройки игрового поля
-    space_size: int = field(default=32, repr=True, init=True)
+    space_size: int = Field(default=32, repr=True, init=True)
+
+
+    @field_validator("width")
+    @classmethod
+    def validate_width(cls, value:int) -> int:
+        if value <= 0:
+            raise ValueError("Ширина экрана должна быть положительным числом")
+        if value % 2 != 0:
+            raise ValueError("Ширина экрана должна быть четной для корректного отображения")
+        return value
+
+
+    @field_validator("height")
+    @classmethod
+    def validate_height(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("Высота экрана должна быть положительным числом")
+        if value % 2 != 0:
+            raise ValueError("Высота экрана должна быть четной для корректного отображения")
+        return value
+
 
     @classmethod
-    def from_config_file(cls, config_file: Optional[str] = DEFAULT_CONFIG_NAME) -> "Resources":
+    def from_config_file(cls, config_file: str = DEFAULT_CONFIG_NAME) -> Resources:
         """Создать конфигурацию из файла"""
-        config_parser:"ConfigParser" = ConfigParser()
+        config_parser:ConfigParser = ConfigParser()
 
-        config_path:"Path" = Path(config_file)
+        config_path:Path = Path(config_file)
         # Проверка существования файла
         if not config_path.exists():
             print(f"Файл конфига {config_path} не найден")
@@ -59,7 +80,7 @@ class Resources:
             print("📋 Найдены ключи:", list(config_parser["Game place settings"].keys()))
 
         # Путь до иконки
-        path_icon:"Path" = Path("assets", "icon", "app_icon.ico")
+        path_icon:Path = Path("assets", "icon", "app_icon.ico")
         if not path_icon.exists():
             print("Иконка не найдена")
             print(f"Путь поиска: {path_icon}")
@@ -74,13 +95,13 @@ class Resources:
             width=int(base_settings.get("width", 1024)),
             height=int(base_settings.get("height", 768)),
             resizable=base_settings.get("resizable", "False") == "True",
-            title=base_settings.get("title", "Snake Game"),
-            icon_path=place_settings.get("path_icon", path_icon),
+            title=str(base_settings.get("title", "Snake Game")),
+            icon_path=str(place_settings.get("path_icon", path_icon)),
 
             # Базовые настройки игры
             delay=int(game_settings.get("delay", 200)),
-            snake_color=game_settings.get("snake_color_default", "green"),
-            food_color=game_settings.get("food_color_default", "red"),
+            snake_color=str(game_settings.get("snake_color_default", "green")),
+            food_color=str(game_settings.get("food_color_default", "red")),
 
             # Настройки игрового поля
             space_size = int(place_settings.get("space_size", 25))
