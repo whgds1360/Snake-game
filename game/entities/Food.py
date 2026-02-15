@@ -7,15 +7,18 @@ class Food:
     def __init__(self, canvas, settings) -> None:
         self.width: int = settings.width
         self.height: int = settings.height
+
         self.space_size: int = settings.space_size
         self.canvas = canvas
         self.settings = settings
+
+        #Игровой счет
+        self.eat_count = 0
 
         # Список координат еды
         self.coord: List[List[int]] = []
         # Список ID объектов на canvas
         self.squares: List[int] = []
-
         # Создаем первую еду
         self.spawn_food()
 

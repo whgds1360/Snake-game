@@ -68,4 +68,10 @@ class Move:
             # Рисуем новую еду
             food.spawn_food()
 
+            #Добавляем в счетчик отрисованную еду
+            food.eat_count += 1
+
+            # Отладочная печать
+            print(f"Съедено: {food.eat_count}")
+
         window.after(settings.delay, Move.move, window, canvas, snake, settings, food)

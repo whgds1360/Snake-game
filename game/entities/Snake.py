@@ -4,7 +4,7 @@ from typing import List, final
 @final
 class Snake:
     def __init__(self, canvas, settings)->None:
-        #Для выравнивания змейки по центру окна (уже адаптивно)
+        #Для выравнивания змейки по центру окна
         width:int = settings.width // 2
         height:int = settings.height // 2
 
@@ -14,7 +14,15 @@ class Snake:
         self.squares:List = []
 
         for x, y in self.coord:
-            square = canvas.create_rectangle(x, y, x+settings.space_size, y+settings.space_size, fill=settings.snake_color)
+            square = canvas.create_rectangle(
+                x, y,
+                x+settings.space_size,
+                y+settings.space_size,
+                fill=settings.snake_color,
+                outline="green",
+                width = 3
+            )
+
             self.squares.append(square)
 
 
@@ -43,7 +51,9 @@ class Snake:
             x, y,
             x + settings.space_size,
             y + settings.space_size,
-            fill=settings.snake_color
+            fill=settings.snake_color,
+            outline="green",
+            width=3
         )
 
         # Вставляем новый сегмент в начало списка squares

@@ -102,8 +102,8 @@ class Resources(BaseModel):
 
             # Базовые настройки игры
             delay=int(game_settings.get("delay", 200)),
-            snake_color=str(game_settings.get("snake_color_default", "green")),
-            food_color=str(game_settings.get("food_color_default", "red")),
+            snake_color=str(game_settings.get("snake_color", "green")),
+            food_color=str(game_settings.get("food_color", "red")),
 
             # Настройки игрового поля
             space_size = int(place_settings.get("space_size", 25))
