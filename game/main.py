@@ -36,8 +36,7 @@ def main():
     window.bind(sequence="<Key>", func=Move.button_handler)
 
     #Движение змеи
-    Move.move(window=window, canvas=canvas, snake=snake, settings=settings)
-
+    Move.move(window=window, canvas=canvas, snake=snake, settings=settings, food=food)
 
     window.mainloop()
 

@@ -7,7 +7,9 @@ from pydantic import BaseModel, field_validator, Field
 
 @final
 class Resources(BaseModel):
-    """Получение базовых настроек"""
+    """
+    Получение базовых настроек
+    """
     #Константы
     DEFAULT_CONFIG_NAME:ClassVar[Final[str]] = "Config.ini"
 
