@@ -5,9 +5,10 @@ from game.entities.Snake import Snake
 from game.utils.Move import Move
 from PIL import Image, ImageTk
 from pathlib import Path
-from typing import Final
+from typing import Final, final
 
 
+@final
 class Game:
     # Путь до картинки
     IMAGE_PATH: Final[Path] = Path("assets", "scenes", "BackGroundGame.jpg")
@@ -41,10 +42,16 @@ class Game:
         snake: Snake = Snake(canvas=canvas, settings=settings)
 
         # Отрисовка еды
-        food: Food = Food(canvas=canvas, settings=settings)
+        food: Food = Food(canvas=canvas, settings=settings, snake=snake)
 
         # Привязка обработчика к основному окну
         window.bind(sequence="<Key>", func=Move.button_handler)
 
         # Движение змеи
         Move.move(window=window, canvas=canvas, snake=snake, settings=settings, food=food)
+
+        canvas.create_rectangle(192, 96, #TODO условная сетка потом убери
+                                832, 736,
+                                outline="pink",
+                                width=3
+                                )

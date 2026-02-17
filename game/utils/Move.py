@@ -56,7 +56,7 @@ class Move:
 
         snake.draw_new_segment(canvas=canvas, snake=snake, direction=direction, settings=settings)
 
-        if not cls.check_eating(snake, food):
+        if not cls.check_eating(snake=snake, food=food):
             del snake.coord[-1]
             canvas.delete(snake.squares[-1])
             del snake.squares[-1]
@@ -66,7 +66,7 @@ class Move:
             canvas.delete(food.squares[-1])
             del food.squares[-1]
             # Рисуем новую еду
-            food.spawn_food()
+            food.spawn_food(snake=snake)
 
             #Добавляем в счетчик отрисованную еду
             food.eat_count += 1
