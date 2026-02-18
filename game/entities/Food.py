@@ -12,7 +12,7 @@ class Food:
         self.canvas = canvas
         self.food_color = settings.food_color
 
-        #Игровой счет
+        # Игровой счет
         self.eat_count = 0
 
         # Список координат еды
@@ -21,7 +21,6 @@ class Food:
         self.squares: List[int] = []
         # Создаем первую еду
         self.spawn_food(snake=snake)
-
 
     def spawn_food(self, snake) -> None:
         """
@@ -33,7 +32,9 @@ class Food:
         left = Game.side_indent  # левая граница (например 192)
         right = Game.side_indent + Game.game_width  # правая граница (192 + 640 = 832)
         top = Game.vertical_indent  # верхняя граница (например 64)
-        bottom = Game.vertical_indent + Game.game_height  # нижняя граница (64 + 640 = 704)
+        bottom = (
+            Game.vertical_indent + Game.game_height
+        )  # нижняя граница (64 + 640 = 704)
 
         while True:
             # Генерируем координаты ТОЛЬКО внутри игрового поля
@@ -58,9 +59,6 @@ class Food:
         self.coord.append([x, y])
 
         square = self.canvas.create_rectangle(
-            x, y,
-            x + self.space_size,
-            y + self.space_size,
-            fill=self.food_color
+            x, y, x + self.space_size, y + self.space_size, fill=self.food_color
         )
         self.squares.append(square)

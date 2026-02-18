@@ -12,10 +12,10 @@ class LoseScreen(Menu):
     IMAGE_LOSE_SCREEN: Final[Path] = Path("assets", "scenes", "LoseScreen.jpg")
     IMAGE_TRY_AGAIN: Final[Path] = Path("assets", "scenes", "TryAgain.png")
 
-    ready_lose_button_image:ClassVar
+    ready_lose_button_image: ClassVar
 
     @classmethod
-    def screen_rendering(cls, window, settings)->None:
+    def screen_rendering(cls, window, settings) -> None:
         """
         Метод просто отрисовывает меню с кнопками
         """
@@ -31,15 +31,14 @@ class LoseScreen(Menu):
 
         # Создаем холст
         canvas = Canvas(
-            master=window,
-            width=settings.width,
-            height=settings.height,
-            bg="black"
+            master=window, width=settings.width, height=settings.height, bg="black"
         )
         canvas.pack()
 
         # Устанавливаем фон
-        canvas.create_image(0, 0, image=lose_screen_image, anchor="nw", tag="background")
+        canvas.create_image(
+            0, 0, image=lose_screen_image, anchor="nw", tag="background"
+        )
         canvas.background_image = lose_screen_image  # сохраняем ссылку
 
         # Создаем кнопки
@@ -47,7 +46,7 @@ class LoseScreen(Menu):
             master=canvas,
             image=str(cls.ready_lose_button_image),
             bd=0,
-            command=lambda: cls.start_game(window, settings)
+            command=lambda: cls.start_game(window, settings),
         )
 
         # Размещение кнопок

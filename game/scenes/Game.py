@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Final, final, ClassVar
 
 
-
 @final
 class Game:
     # Константы и классовые переменные
@@ -25,7 +24,7 @@ class Game:
     game_width_in_cells: ClassVar[int]
     game_height_in_cells: ClassVar[int]
 
-    #Отступы
+    # Отступы
     side_indent: ClassVar[int]
     vertical_indent: ClassVar[int]
 
@@ -35,7 +34,6 @@ class Game:
 
     # Флаг для остановки игры
     game_active: ClassVar[bool] = True
-
 
     @classmethod
     def __initialize(cls, settings) -> None:
@@ -50,16 +48,15 @@ class Game:
         cls.game_active = True
         cls.game_score = 0
 
-        #Размеры в клетках
+        # Размеры в клетках
         cls.game_width_in_cells = cls.game_width // cls.space_size
         cls.game_height_in_cells = cls.game_height // cls.space_size
 
-        #Максимальный счет
+        # Максимальный счет
         cls.max_score = cls.game_width_in_cells * cls.game_height_in_cells - 3
 
         cls.side_indent = (cls.window_width - cls.game_width) // 2
         cls.vertical_indent = (cls.window_height - cls.game_height) // 2
-
 
     @classmethod
     def check_win(cls) -> bool:
@@ -67,7 +64,6 @@ class Game:
         Проверка условия победы
         """
         return cls.game_score >= cls.max_score
-
 
     @classmethod
     def check_lose(cls, snake) -> bool:
@@ -83,8 +79,7 @@ class Game:
         bottom = cls.vertical_indent + cls.game_height
 
         # Проверка в пикселях
-        if (head_x < left or head_x >= right or
-                head_y < top or head_y >= bottom):
+        if head_x < left or head_x >= right or head_y < top or head_y >= bottom:
             return True
 
         # Проверка столкновения с собственным телом
@@ -93,14 +88,12 @@ class Game:
 
         return False
 
-
     @classmethod
     def update_score(cls, food) -> None:
         """
         Обновляет счет игры
         """
         cls.game_score = food.eat_count
-
 
     @classmethod
     def game_rendering(cls, window, settings) -> None:
@@ -111,19 +104,20 @@ class Game:
 
         # Загружаем изображение
         image = Image.open(cls.IMAGE_PATH)
-        image = image.resize((settings.width, settings.height), Image.Resampling.LANCZOS)
+        image = image.resize(
+            (settings.width, settings.height), Image.Resampling.LANCZOS
+        )
         background_image_game = ImageTk.PhotoImage(image)
 
         # Создаем холст (Игровое поле)
         canvas = Canvas(
-            master=window,
-            width=settings.width,
-            height=settings.height,
-            bg="black"
+            master=window, width=settings.width, height=settings.height, bg="black"
         )
         canvas.pack()
 
-        canvas.create_image(0, 0, image=background_image_game, anchor="nw", tag="background")
+        canvas.create_image(
+            0, 0, image=background_image_game, anchor="nw", tag="background"
+        )
         canvas.background_image = background_image_game
 
         # Отрисовка змеи
@@ -139,8 +133,9 @@ class Game:
         cls.game_place_rendering(canvas=canvas, settings=settings)
 
         # Запускаем игровой цикл
-        cls.__game_loop(window=window, canvas=canvas, snake=snake, settings=settings, food=food)
-
+        cls.__game_loop(
+            window=window, canvas=canvas, snake=snake, settings=settings, food=food
+        )
 
     @classmethod
     def __game_loop(cls, window, canvas, snake, settings, food) -> None:
@@ -150,8 +145,7 @@ class Game:
         from game.scenes.LoseScreen import LoseScreen
         from game.scenes.WinScreen import WinScreen
 
-
-         # Проверка поражения
+        # Проверка поражения
         if cls.check_lose(snake):
             cls.game_active = False
 
@@ -164,7 +158,9 @@ class Game:
 
         # Движение змеи
         direction: str = Move.current_direction
-        Move.draw_new_segment(canvas=canvas, snake=snake, direction=direction, settings=settings)
+        Move.draw_new_segment(
+            canvas=canvas, snake=snake, direction=direction, settings=settings
+        )
 
         # Проверка съедения еды
         if snake.coord[0] == food.coord[0]:
@@ -189,8 +185,9 @@ class Game:
 
         # Продолжаем цикл
         if cls.game_active:
-            window.after(settings.delay, cls.__game_loop, window, canvas, snake, settings, food)
-
+            window.after(
+                settings.delay, cls.__game_loop, window, canvas, snake, settings, food
+            )
 
     @classmethod
     def game_place_rendering(cls, canvas, settings) -> None:
@@ -198,8 +195,10 @@ class Game:
         Отрисовка рамок игрового поля
         """
         canvas.create_rectangle(
-            cls.side_indent, cls.vertical_indent,
-            cls.game_width + cls.side_indent, cls.game_height + cls.vertical_indent,
+            cls.side_indent,
+            cls.vertical_indent,
+            cls.game_width + cls.side_indent,
+            cls.game_height + cls.vertical_indent,
             outline=settings.color_field_game_place,
-            width=3
+            width=3,
         )

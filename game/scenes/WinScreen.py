@@ -12,10 +12,10 @@ class WinScreen(Menu):
     IMAGE_WIN_SCREEN: Final[Path] = Path("assets", "scenes", "WinScreen.jpg")
     IMAGE_TRY_AGAIN: Final[Path] = Path("assets", "scenes", "TryAgain.png")
 
-    ready_win_button_image:ClassVar
+    ready_win_button_image: ClassVar
 
     @classmethod
-    def screen_rendering(cls, window, settings)->None:
+    def screen_rendering(cls, window, settings) -> None:
         """
         Метод просто отрисовывает меню с кнопками
         """
@@ -31,10 +31,7 @@ class WinScreen(Menu):
 
         # Создаем холст
         canvas = Canvas(
-            master=window,
-            width=settings.width,
-            height=settings.height,
-            bg="black"
+            master=window, width=settings.width, height=settings.height, bg="black"
         )
         canvas.pack()
 
@@ -47,7 +44,7 @@ class WinScreen(Menu):
             master=canvas,
             image=str(cls.ready_win_button_image),
             bd=0,
-            command=lambda: cls.start_game(window, settings)
+            command=lambda: cls.start_game(window, settings),
         )
 
         # Размещение кнопок

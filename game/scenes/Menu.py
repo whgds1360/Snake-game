@@ -7,25 +7,25 @@ from random import randint
 from abc import ABC, abstractmethod
 
 
-
 class Menu(ABC):
     # Пути к изображениям
     IMAGE_BACKGROUND: Final[Path] = Path("assets", "scenes", "BackGroundMenu.jpg")
     IMAGE_START: Final[Path] = Path("assets", "scenes", "Start.png")
     IMAGE_SETTINGS: Final[Path] = Path("assets", "scenes", "Settings.png")
 
-    ready_start_image_menu:ClassVar
-
+    ready_start_image_menu: ClassVar
 
     @classmethod
     @abstractmethod
-    def screen_rendering(cls, window, settings)->None:
+    def screen_rendering(cls, window, settings) -> None:
         """
         Метод просто отрисовывает меню с кнопками
         """
         # Загружаем фоновое изображение
         background_image_menu = Image.open(cls.IMAGE_BACKGROUND)
-        background_image_menu = background_image_menu.resize((settings.width, settings.height))
+        background_image_menu = background_image_menu.resize(
+            (settings.width, settings.height)
+        )
         background_image_menu = ImageTk.PhotoImage(background_image_menu)
 
         # Загружаем изображения кнопок
@@ -35,15 +35,14 @@ class Menu(ABC):
 
         # Создаем холст
         canvas = Canvas(
-            master=window,
-            width=settings.width,
-            height=settings.height,
-            bg="black"
+            master=window, width=settings.width, height=settings.height, bg="black"
         )
         canvas.pack()
 
         # Устанавливаем фон
-        canvas.create_image(0, 0, image=background_image_menu, anchor="nw", tag="background")
+        canvas.create_image(
+            0, 0, image=background_image_menu, anchor="nw", tag="background"
+        )
         canvas.background_image = background_image_menu  # сохраняем ссылку
 
         # Создаем кнопки
@@ -51,7 +50,7 @@ class Menu(ABC):
             master=canvas,
             image=str(cls.ready_start_image_menu),
             bd=0,
-            command=lambda: cls.start_game(window, settings)
+            command=lambda: cls.start_game(window, settings),
         )
 
         # Размещение кнопок
@@ -60,13 +59,12 @@ class Menu(ABC):
             y=400,
         )
 
-
     @classmethod
-    def start_game(cls, window, settings)->None:
+    def start_game(cls, window, settings) -> None:
         """
         Запускает игровой процесс
         """
-        #Вода пока идет заставка
+        # Вода пока идет заставка
         snake_facts = [
             "🐍 Змеи не имеют век и спят с открытыми глазами!",
             "🐍 Самая длинная змея в мире - сетчатый питон (до 10 метров)",
@@ -75,29 +73,31 @@ class Menu(ABC):
             "🐍 Змеи могут есть только раз в несколько месяцев",
             "🐍 Самая быстрая змея - черная мамба (до 20 км/ч)",
             "🐍 Змеи глухие, но чувствуют вибрацию земли",
-            "🐍 Кобра может плеваться ядом на расстояние до 3 метров"
+            "🐍 Кобра может плеваться ядом на расстояние до 3 метров",
         ]
 
-        #Очищаем экран для заставки
+        # Очищаем экран для заставки
         for widget in window.winfo_children():
             widget.destroy()
 
-        #Заставка
-        splash_label = Label(window, text=f"🎬 Игра начнется через 6 секунд 🎬\n\n\n\n\n Интересный факт: {snake_facts[randint(0, len(snake_facts)-1)]}",
-                                font=("Courier", 12),
-                                bg="black", fg="white")
+        # Заставка
+        splash_label = Label(
+            window,
+            text=f"🎬 Игра начнется через 6 секунд 🎬\n\n\n\n\n Интересный факт: {snake_facts[randint(0, len(snake_facts)-1)]}",
+            font=("Courier", 12),
+            bg="black",
+            fg="white",
+        )
         splash_label.pack(expand=True, fill="both")
 
-        window.after(6000, lambda:cls.after_splash(window=window, settings=settings))
-
+        window.after(6000, lambda: cls.after_splash(window=window, settings=settings))
 
     @classmethod
-    def after_splash(cls, window, settings)->None:
+    def after_splash(cls, window, settings) -> None:
         """
         Что делать после заставки
         """
         from game.scenes.Game import Game
-
 
         # Удаляем все виджеты
         for widget in window.winfo_children():

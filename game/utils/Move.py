@@ -4,14 +4,14 @@ from typing import ClassVar, final
 @final
 class Move:
 
-    current_direction:ClassVar[str] = "Right"
+    current_direction: ClassVar[str] = "Right"
 
     @classmethod
     def button_handler(cls, event) -> None:
         """
         Метод меняет направление змеи в зависимости от нажатой кнопки
         """
-        #Отладочная печать
+        # Отладочная печать
         print(f"Нажата клавиша: {event.keysym}")
 
         if event.keysym == "Right":
@@ -38,7 +38,6 @@ class Move:
             else:
                 cls.current_direction = "Down"
 
-
     @staticmethod
     def draw_new_segment(canvas, snake, direction, settings) -> None:
         """
@@ -62,10 +61,11 @@ class Move:
 
         # Рисуем новый сегмент головы
         snake_square = canvas.create_rectangle(
-            x, y,
+            x,
+            y,
             x + settings.space_size,
             y + settings.space_size,
-            fill=settings.snake_color
+            fill=settings.snake_color,
         )
 
         # Вставляем новый сегмент в начало списка squares
