@@ -3,7 +3,6 @@ from tkinter import Canvas
 from PIL import Image, ImageTk
 from pathlib import Path
 from typing import Final, final
-from game.scenes.Menu import Menu
 
 
 @final
@@ -39,10 +38,12 @@ class LoadScreen:
 
     @classmethod
     def menu_render(cls, window, settings)->None:
+        from game.scenes.Menu import Menu
+
 
         #Очищаем экран для заставки
         for widget in window.winfo_children():
             widget.destroy()
 
-        Menu.menu_rendering(window, settings)
+        Menu.screen_rendering(window=window, settings=settings)
 

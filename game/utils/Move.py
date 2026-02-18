@@ -1,10 +1,10 @@
-from typing import Optional, ClassVar, final
+from typing import ClassVar, final
 
 
 @final
 class Move:
 
-    current_direction:ClassVar[Optional[str]] = "Down"
+    current_direction:ClassVar[str] = "Right"
 
     @classmethod
     def button_handler(cls, event) -> None:
@@ -39,39 +39,34 @@ class Move:
                 cls.current_direction = "Down"
 
 
-    @classmethod
-    def check_eating(cls, snake, food) -> bool:
+    @staticmethod
+    def draw_new_segment(canvas, snake, direction, settings) -> None:
         """
-        Метод проверяет съедена ли еда
+        Рисует новый сегмент змеи
         """
-        return snake.coord[0] == food.coord[0]
+        # Получаем текущие координаты головы
+        x, y = snake.coord[0]
 
+        # Обновляем координаты в зависимости от направления
+        if direction == "Down":
+            y += settings.space_size
+        elif direction == "Up":
+            y -= settings.space_size
+        elif direction == "Left":
+            x -= settings.space_size
+        elif direction == "Right":
+            x += settings.space_size
 
-    @classmethod
-    def move(cls, window, canvas, snake, settings, food) -> None:
-        """
-        Основной метод движения змеи, который занимается отрисовкой новых сегментов
-        """
-        direction:str = cls.current_direction
+        # Вставляем новые координаты головы в начало списка
+        snake.coord.insert(0, [x, y])
 
-        snake.draw_new_segment(canvas=canvas, snake=snake, direction=direction, settings=settings)
+        # Рисуем новый сегмент головы
+        snake_square = canvas.create_rectangle(
+            x, y,
+            x + settings.space_size,
+            y + settings.space_size,
+            fill=settings.snake_color
+        )
 
-        if not cls.check_eating(snake=snake, food=food):
-            del snake.coord[-1]
-            canvas.delete(snake.squares[-1])
-            del snake.squares[-1]
-
-        else:
-            del food.coord[-1]
-            canvas.delete(food.squares[-1])
-            del food.squares[-1]
-            # Рисуем новую еду
-            food.spawn_food(snake=snake)
-
-            #Добавляем в счетчик отрисованную еду
-            food.eat_count += 1
-
-            # Отладочная печать
-            print(f"Съедено: {food.eat_count}")
-
-        window.after(settings.delay, Move.move, window, canvas, snake, settings, food)
+        # Вставляем новый сегмент в начало списка squares
+        snake.squares.insert(0, snake_square)

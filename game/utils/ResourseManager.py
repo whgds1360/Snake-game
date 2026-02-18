@@ -2,7 +2,7 @@ from __future__ import annotations
 from configparser import ConfigParser
 from typing import final, Final, ClassVar, Dict
 from pathlib import Path
-from pydantic import BaseModel, field_validator, Field
+from pydantic import BaseModel, field_validator, Field, model_validator
 
 
 @final
@@ -27,6 +27,9 @@ class Resources(BaseModel):
 
     # Настройки игрового поля
     space_size: int = Field(default=32, repr=True, init=True)
+    width_game_place: int = Field(default=640, repr=True, init=True)
+    height_game_place: int = Field(default=640, repr=True, init=True)
+    color_field_game_place: str = Field(default="pink", repr=True, init=True)
 
 
     @field_validator("width")
@@ -47,6 +50,32 @@ class Resources(BaseModel):
         if value % 2 != 0:
             raise ValueError("Высота экрана должна быть четной для корректного отображения")
         return value
+
+
+    @model_validator(mode="after")
+    def validate_space_size(self) -> Resources:
+        if self.width % self.space_size != 0 or self.height % self.space_size != 0:
+            raise ValueError("""    Введен некорректный размер игрового поля!!!
+            
+                                                Обратите внимание!!!
+                                Ширина и высота окна должны делиться на размер сетки!!!
+                                        А также ширина и высота игрового поля!!!
+            """)
+        return self
+
+
+    @model_validator(mode="after")
+    def validate_width_game_place(self) -> Resources:
+        if self.width <= self.width_game_place:
+            raise ValueError("Ширина игрового поля превышает размеры окна!")
+        return self
+
+
+    @model_validator(mode="after")
+    def validate_height_game_place(self) -> Resources:
+        if self.height <= self.height_game_place:
+            raise ValueError("Высота игрового поля превышает размеры окна!")
+        return self
 
 
     @classmethod
@@ -106,7 +135,10 @@ class Resources(BaseModel):
             food_color=str(game_settings.get("food_color", "red")),
 
             # Настройки игрового поля
-            space_size = int(place_settings.get("space_size", 25))
+            space_size = int(place_settings.get("space_size", 32)),
+            width_game_place = int(place_settings.get("width_game_place", 640)),
+            height_game_place = int(place_settings.get("height_game_place", 640)),
+            color_field_game_place =str(place_settings.get("color_field_game_place", "pink")),
         )
 
 

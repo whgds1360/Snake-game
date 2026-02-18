@@ -2,21 +2,24 @@ from __future__ import annotations
 from tkinter import Canvas, Button, Label
 from PIL import Image, ImageTk
 from pathlib import Path
-from typing import Final, final
-from game.scenes.Game import Game
+from typing import Final, ClassVar
 from random import randint
+from abc import ABC, abstractmethod
 
 
-@final
-class Menu:
+
+class Menu(ABC):
     # Пути к изображениям
     IMAGE_BACKGROUND: Final[Path] = Path("assets", "scenes", "BackGroundMenu.jpg")
     IMAGE_START: Final[Path] = Path("assets", "scenes", "Start.png")
     IMAGE_SETTINGS: Final[Path] = Path("assets", "scenes", "Settings.png")
 
+    ready_start_image_menu:ClassVar
+
 
     @classmethod
-    def menu_rendering(cls, window, settings)->None:
+    @abstractmethod
+    def screen_rendering(cls, window, settings)->None:
         """
         Метод просто отрисовывает меню с кнопками
         """
@@ -29,10 +32,6 @@ class Menu:
         start_image_menu = Image.open(cls.IMAGE_START)
         start_image_menu = start_image_menu.resize((200, 70))
         cls.ready_start_image_menu = ImageTk.PhotoImage(start_image_menu)
-
-        settings_image_menu = Image.open(cls.IMAGE_SETTINGS)
-        settings_image_menu = settings_image_menu.resize((200, 70))
-        cls.ready_settings_image_menu = ImageTk.PhotoImage(settings_image_menu)
 
         # Создаем холст
         canvas = Canvas(
@@ -47,30 +46,18 @@ class Menu:
         canvas.create_image(0, 0, image=background_image_menu, anchor="nw", tag="background")
         canvas.background_image = background_image_menu  # сохраняем ссылку
 
-        # Создаем кнопки с правильной передачей параметров
+        # Создаем кнопки
         start_button = Button(
             master=canvas,
-            image=cls.ready_start_image_menu,
+            image=str(cls.ready_start_image_menu),
             bd=0,
-            command=lambda: cls.start_game(window, settings)  # ВАЖНО: передаем параметры через lambda
-        )
-
-        settings_button = Button(
-            master=canvas,
-            image=cls.ready_settings_image_menu,
-            bd=0,
-            command=lambda: cls.open_settings(window, settings)  # если нужны параметры
+            command=lambda: cls.start_game(window, settings)
         )
 
         # Размещение кнопок
         start_button.place(
             x=settings.width // 2 - cls.ready_start_image_menu.width() // 2,
             y=400,
-        )
-
-        settings_button.place(
-            x=settings.width // 2 - cls.ready_settings_image_menu.width() // 2,
-            y=500,
         )
 
 
@@ -101,10 +88,7 @@ class Menu:
                                 bg="black", fg="white")
         splash_label.pack(expand=True, fill="both")
 
-        # Сохраняем ссылку на лейбл
-        window.splash_label = splash_label
-
-        window.after(6000, lambda:cls.after_splash(window, settings))
+        window.after(6000, lambda:cls.after_splash(window=window, settings=settings))
 
 
     @classmethod
@@ -112,18 +96,12 @@ class Menu:
         """
         Что делать после заставки
         """
+        from game.scenes.Game import Game
+
+
         # Удаляем все виджеты
         for widget in window.winfo_children():
             widget.destroy()
 
         # Запускаем игру
         Game.game_rendering(window=window, settings=settings)
-
-
-    @classmethod
-    def open_settings(cls, window, settings)->None:
-        """
-        Открывает настройки
-        """
-        pass
-            # Здесь будет логика настроек

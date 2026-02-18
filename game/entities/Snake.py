@@ -8,8 +8,8 @@ class Snake:
         width:int = settings.width // 2
         height:int = settings.height // 2
 
-        self.coord:List[List] = [[width, height],
-                      [width, height],
+        self.coord:List[List] = [[width, height+ settings.space_size*2],
+                      [width, height + settings.space_size],
                       [width, height]]
         self.squares:List = []
 
@@ -18,43 +18,22 @@ class Snake:
                 x, y,
                 x+settings.space_size,
                 y+settings.space_size,
-                fill=settings.snake_color,
-                outline="green",
-                width = 3
+                fill=settings.snake_color
             )
 
             self.squares.append(square)
 
 
-    def draw_new_segment(self, canvas, snake, direction, settings) -> None:
+    def check_self_collision(self) -> bool:
         """
-        Рисует новый сегмент змеи
+        Проверка столкновения с собой
         """
-        # Получаем текущие координаты головы
-        x, y = self.coord[0]
+        if len(self.coord) < 4:  # Для 3 и менее сегментов столкновение невозможно
+            return False
 
-        # Обновляем координаты в зависимости от направления
-        if direction == "Down":
-            y += settings.space_size
-        elif direction == "Up":
-            y -= settings.space_size
-        elif direction == "Left":
-            x -= settings.space_size
-        elif direction == "Right":
-            x += settings.space_size
+        # Проверяем, не врезалась ли голова в тело
+        # Пропускаем первый сегмент после головы (шею), так как он всегда рядом
+        head = self.coord[0]
+        body_without_neck = self.coord[2:]  # пропускаем голову и шею
 
-        # Вставляем новые координаты головы в начало списка
-        self.coord.insert(0, [x, y])
-
-        # Рисуем новый сегмент головы
-        snake_square = canvas.create_rectangle(
-            x, y,
-            x + settings.space_size,
-            y + settings.space_size,
-            fill=settings.snake_color,
-            outline="green",
-            width=3
-        )
-
-        # Вставляем новый сегмент в начало списка squares
-        snake.squares.insert(0, snake_square)
+        return head in body_without_neck
