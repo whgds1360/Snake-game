@@ -39,6 +39,7 @@ class Game:
     def __initialize(cls, settings) -> None:
         """
         Инициализация размеров из настроек
+        и просчет отступов и размеров в клетках
         """
         cls.window_width = settings.width
         cls.window_height = settings.height
@@ -89,11 +90,29 @@ class Game:
         return False
 
     @classmethod
-    def update_score(cls, food) -> None:
+    def render_game_score(cls, canvas) -> None:
+        # Игровой счет
+        canvas.create_text(
+            cls.side_indent + 95,  # X координата (слева с отступом)
+            cls.vertical_indent - 20,  # Y координата (над игровым полем)
+            text=f"SCORE: {cls.game_score}",
+            fill="white",  # Цвет текста
+            font=("Fixedsys", 34, "bold"),
+            tag="score_text"  # Тег для возможности удаления/обновления
+        )
+
+    @classmethod
+    def update_score(cls, canvas, food) -> None:
         """
         Обновляет счет игры
         """
         cls.game_score = food.eat_count
+
+
+        # Удаляем старый текст счета, если он есть
+        canvas.delete("score_text")
+
+        cls.render_game_score(canvas=canvas)
 
     @classmethod
     def game_rendering(cls, window, settings) -> None:
@@ -131,6 +150,10 @@ class Game:
 
         # Рендеринг рамки игрового поля
         cls.game_place_rendering(canvas=canvas, settings=settings)
+
+
+        # Игровой счет
+        cls.render_game_score(canvas=canvas)
 
         # Запускаем игровой цикл
         cls.__game_loop(
@@ -170,7 +193,7 @@ class Game:
 
             food.spawn_food(snake=snake)
             food.eat_count += 1
-            cls.update_score(food)
+            cls.update_score(canvas=canvas, food=food)
 
             # Проверка победы
             if cls.check_win():

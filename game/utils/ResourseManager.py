@@ -1,6 +1,6 @@
 from __future__ import annotations
 from configparser import ConfigParser
-from typing import final, Final, ClassVar, Dict
+from typing import final, Final, ClassVar, Dict, List
 from pathlib import Path
 from pydantic import BaseModel, field_validator, Field, model_validator
 
@@ -33,6 +33,9 @@ class Resources(BaseModel):
     width_game_place: int = Field(default=640, repr=True, init=True)
     height_game_place: int = Field(default=640, repr=True, init=True)
     color_field_game_place: str = Field(default="pink", repr=True, init=True)
+
+    # Прочие настройки
+    snake_facts: List[str] = Field(default=[], repr=True, init=True)
 
     @field_validator("width")
     @classmethod
@@ -113,6 +116,10 @@ class Resources(BaseModel):
             print(
                 "📋 Найдены ключи:", list(config_parser["Game place settings"].keys())
             )
+        if "Other" in config_parser:
+            print(
+                "📋 Найдены ключи:", list(config_parser["Other"].keys())
+            )
 
         # Путь до иконки
         path_icon: Path = Path("assets", "icon", "app_icon.ico")
@@ -129,6 +136,9 @@ class Resources(BaseModel):
         )  # как словарь
         place_settings: Dict[str, str] = dict(
             config_parser.items("Game place settings")
+        )  # как словарь
+        other_settings: Dict[str, str] = dict(
+            config_parser.items("Other")
         )  # как словарь
 
         return cls(
@@ -149,6 +159,8 @@ class Resources(BaseModel):
             color_field_game_place=str(
                 place_settings.get("color_field_game_place", "pink")
             ),
+            # Прочие настройки
+            snake_facts=list(map(str, other_settings.get("snake_facts", []).split(';')))
         )
 
 

@@ -10,10 +10,10 @@ class Food:
 
         self.space_size: int = settings.space_size
         self.canvas = canvas
-        self.food_color = settings.food_color
+        self.food_color:str = settings.food_color
 
         # Игровой счет
-        self.eat_count = 0
+        self.eat_count:int = 0
 
         # Список координат еды
         self.coord: List[List[int]] = []

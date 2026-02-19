@@ -13,7 +13,7 @@ class LoadScreen:
     @classmethod
     def load_screen_rendering(cls, window, settings) -> None:
         """
-        Метод просто отрисовывает меню с кнопками
+        Метод просто отрисовывает загрузочный экран
         """
         # Загружаем фоновое изображение
         background_image_menu = Image.open(cls.IMAGE_LOAD_SCREEN)
@@ -38,6 +38,9 @@ class LoadScreen:
 
     @classmethod
     def menu_render(cls, window, settings) -> None:
+        """
+        Метод вызывает функцию отрисовки меню после загрузочного экрана
+        """
         from game.scenes.Menu import Menu
 
         # Очищаем экран для заставки
