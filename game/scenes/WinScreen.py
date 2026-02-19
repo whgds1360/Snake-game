@@ -3,7 +3,7 @@ from tkinter import Canvas, Button
 from PIL import Image, ImageTk
 from pathlib import Path
 from typing import Final, final, ClassVar
-from game.scenes.Menu import Menu
+from scenes.Menu import Menu
 
 
 @final

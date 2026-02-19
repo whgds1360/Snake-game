@@ -12,7 +12,7 @@ class Resources(BaseModel):
     """
 
     # Константы
-    DEFAULT_CONFIG_NAME: ClassVar[Final[str]] = "Config.ini"
+    DEFAULT_CONFIG_NAME: Final[str] = "Config.ini"
 
     # Базовые настройки окна
     width: int = Field(default=1024, repr=True, init=True)

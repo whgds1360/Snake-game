@@ -26,7 +26,7 @@ class Food:
         """
         Создает новую еду в случайном месте внутри игрового поля
         """
-        from game.scenes.Game import Game
+        from scenes.Game import Game
 
         # Границы игрового поля в ПИКСЕЛЯХ
         left = Game.side_indent  # левая граница (например 192)

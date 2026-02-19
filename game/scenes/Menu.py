@@ -88,7 +88,7 @@ class Menu(ABC):
         """
         Что делать после заставки
         """
-        from game.scenes.Game import Game
+        from scenes.Game import Game
 
         # Удаляем все виджеты
         for widget in window.winfo_children():

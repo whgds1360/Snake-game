@@ -1,8 +1,8 @@
 from __future__ import annotations
 from tkinter import Canvas
-from game.entities.Food import Food
-from game.entities.Snake import Snake
-from game.utils.Move import Move
+from entities.Food import Food
+from entities.Snake import Snake
+from utils.Move import Move
 from PIL import Image, ImageTk
 from pathlib import Path
 from typing import Final, final, ClassVar
@@ -165,8 +165,8 @@ class Game:
         """
         Игровой цикл с проверкой победы/поражения
         """
-        from game.scenes.LoseScreen import LoseScreen
-        from game.scenes.WinScreen import WinScreen
+        from scenes.LoseScreen import LoseScreen
+        from scenes.WinScreen import WinScreen
 
         # Проверка поражения
         if cls.check_lose(snake):

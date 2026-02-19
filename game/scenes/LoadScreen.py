@@ -41,7 +41,7 @@ class LoadScreen:
         """
         Метод вызывает функцию отрисовки меню после загрузочного экрана
         """
-        from game.scenes.Menu import Menu
+        from scenes.Menu import Menu
 
         # Очищаем экран для заставки
         for widget in window.winfo_children():
