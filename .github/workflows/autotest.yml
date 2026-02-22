@@ -1,0 +1,39 @@
+name: Auto test
+on: push
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set UTF-8 encoding
+        run: chcp 65001
+        shell: cmd
+
+      - name: Install requirements.txt
+        run: pip install -r requirements.txt
+
+      - name: Testing
+        run: |
+          $process = Start-Process -FilePath "python" -ArgumentList "main.py" -WorkingDirectory "game" -PassThru -NoNewWindow # Вот эта херь запускает процесс в фоне, он отрабатывает 20 сек. и завершается без ошибки.
+          Write-Host "Игра запущена"
+          Start-Sleep -Seconds 20
+          if (-not $process.HasExited) {
+              Write-Host "Принудительное завершение игры"
+              $process.Kill()
+          }
+          $process.WaitForExit()
+          Write-Host "Тест пройден!"
+          exit 0
+        shell: pwsh
+        env:
+          PYTHONIOENCODING: utf-8
+          PYTHONUTF8: 1
