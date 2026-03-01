@@ -165,7 +165,7 @@ class Resources(BaseModel):
 
 
 @final
-class ResourcesManager:
+class ResourceManager:
     """
     Класс для подгрузки базовых настроек окна и настроек игрового поля
     """
