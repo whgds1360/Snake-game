@@ -77,7 +77,7 @@ class Menu(ABC):
         splash_label = Label(
             window,
             text=f"""
-            🎬 Игра начнется через 6 секунд 🎬\n\n\n\n\n Интересный факт: {snake_facts[randint(0, len(snake_facts)-1)]}
+🎬 Игра начнется через 6 секунд 🎬\n\n\n\n\n Интересный факт: {snake_facts[randint(0, len(snake_facts)-1)]}
             """,
             font=("Courier", 12),
             bg="black",

@@ -1,6 +1,5 @@
 from typing import final, List
 from random import randint
-from loguru import logger
 
 
 @final
@@ -52,7 +51,6 @@ class Food:
 
         # Удаление старой еду
         if self.coord:
-            logger.debug("Удаляю старую еду и генерю новую")
             self.canvas.delete(self.squares[-1])
             self.coord.clear()
             self.squares.clear()

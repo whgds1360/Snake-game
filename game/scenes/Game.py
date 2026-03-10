@@ -93,7 +93,6 @@ class Game:
 
     @classmethod
     def render_game_score(cls, canvas) -> None:
-        logger.debug("Рендерю игровой счет")
         # Игровой счет
         canvas.create_text(
             cls.side_indent + 95,  # X координата (слева с отступом)
@@ -168,7 +167,6 @@ class Game:
         """
         Игровой цикл с проверкой победы/поражения
         """
-        logger.debug("Запускаю игровой цикл")
         from scenes.LoseScreen import LoseScreen
         from scenes.WinScreen import WinScreen
 

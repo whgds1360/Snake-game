@@ -1,7 +1,7 @@
 from __future__ import annotations
 from configparser import ConfigParser
 from pathlib import Path
-from typing import Dict, Final, List, final
+from typing import Dict, Final, final, List
 from loguru import logger
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -26,7 +26,7 @@ class Resources(BaseModel):
     height: int = Field(default=768, repr=True, init=True)
     resizable: bool = Field(default=False, repr=True, init=True)
     title: str = Field(default="Snake Game", repr=True, init=True)
-    icon_path: str = Field(
+    icon_path: Path = Field(
         default=Path("assets", "icon", "app_icon.ico"), repr=True, init=True
     )
 
@@ -90,6 +90,33 @@ class Resources(BaseModel):
         if self.height <= self.height_game_place:
             raise ValueError("Высота игрового поля превышает размеры окна!")
         return self
+
+    @field_validator("snake_facts", mode="before")
+    @classmethod
+    def parse_snake_facts(cls, value):
+        """
+        Превращаем строку из конфига в список строк.
+        Если уже список, то оставляем как есть.
+        """
+        if isinstance(value, list):
+            return value
+
+        if isinstance(value, str):
+            # Если строка не пришла из конфига
+            if not value.strip():
+                return []
+
+            # Разделяем по запятым
+            items = [item.strip() for item in value.split(";") if item.strip()]
+
+            # Если после разделения ничего нет
+            if not items:
+                return []
+
+            return items
+
+        # На всякий случай
+        return []
 
     @classmethod
     def from_config_file(cls, config_file: str = DEFAULT_CONFIG_NAME) -> Resources:
