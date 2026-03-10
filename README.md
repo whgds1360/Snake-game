@@ -1,21 +1,22 @@
 # 🐍 Snake Game (Змейка)
-
+## Реализация классической игры "Змейка" с современным интерфейсом на Python.
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
 [![Tkinter](https://img.shields.io/badge/Tkinter-GUI-green)](https://docs.python.org/3/library/tkinter.html)
 [![Pathlib](https://img.shields.io/badge/Pathlib-Paths-blue)](https://docs.python.org/3/library/pathlib.html)
 [![Pillow](https://img.shields.io/badge/Pillow-Images-purple)](https://pillow.readthedocs.io/)
 [![ConfigParser](https://img.shields.io/badge/ConfigParser-Configs-orange)](https://docs.python.org/3/library/configparser.html)
-[![abc](https://img.shields.io/badge/abc-ABCs-red)](https://docs.python.org/3/library/abc.html)
-[![typing](https://img.shields.io/badge/typing-TypeHints-yellow)](https://docs.python.org/3/library/typing.html)
-[![__future__](https://img.shields.io/badge/__future__-Future-lightgrey)](https://docs.python.org/3/library/__future__.html)
-[![random](https://img.shields.io/badge/random-RNG-teal)](https://docs.python.org/3/library/random.html)
+[![ABC](https://img.shields.io/badge/abc-ABCs-red)](https://docs.python.org/3/library/abc.html)
+[![Typing](https://img.shields.io/badge/typing-TypeHints-yellow)](https://docs.python.org/3/library/typing.html)
+[![__Future__](https://img.shields.io/badge/__future__-Future-lightgrey)](https://docs.python.org/3/library/__future__.html)
+[![Random](https://img.shields.io/badge/random-RNG-teal)](https://docs.python.org/3/library/random.html)
 [![Pydantic](https://img.shields.io/badge/Pydantic-DataValidation-teal)](https://docs.pydantic.dev/)
+[![Loguru](https://img.shields.io/badge/Loguru-Logging-teal)](https://loguru.readthedocs.io/)
+[![MIT License](https://img.shields.io/badge/MIT-MIT-teal)](https://opensource.org/licenses/MIT/)
 
-Реализация классической игры "Змейка" с современным интерфейсом на Python.
 ## 📸 Скриншоты
 
-### Экран меню
-![App_video](screenshots/app_video.gif)
+### Игровой процесс
+<img src="screenshots/app_video.gif" alt="App video demo" width="1024" height="500">
 
 ### Экран меню
 ![Menu](screenshots/menu.png)
@@ -81,12 +82,13 @@ snake-game/
 - Tkinter - интерфейс
 - Pydantic - современные дата-классы с автоматической валидацией
 - Pillow - работа с изображениями
-- pathlib - работа с путями файлов
-- configparser - работа с конфигурационными файлами
-- abc - абстрактные методы
-- typing - аннотации типов
-- future - современные аннотации в коде
-- random - генерация псевдослучайных чисел
+- Pathlib - работа с путями файлов
+- Configparser - работа с конфигурационными файлами
+- ABC - абстрактные методы
+- Typing - аннотации типов
+- Future - аннотации в коде для совместимости с python < 3.10
+- Random - генерация псевдослучайных чисел
+- Loguru - логирование и отладка
 
 ### Установка и запуск
 

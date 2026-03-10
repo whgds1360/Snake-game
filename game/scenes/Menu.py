@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Final, ClassVar
 from random import randint
 from abc import ABC, abstractmethod
+from loguru import logger
 
 
 class Menu(ABC):
@@ -21,6 +22,7 @@ class Menu(ABC):
         """
         Метод просто отрисовывает меню с кнопками
         """
+        logger.debug("Рендерю меню")
         # Загружаем фоновое изображение
         background_image_menu = Image.open(cls.IMAGE_BACKGROUND)
         background_image_menu = background_image_menu.resize(
@@ -74,7 +76,9 @@ class Menu(ABC):
         # Заставка
         splash_label = Label(
             window,
-            text=f"🎬 Игра начнется через 6 секунд 🎬\n\n\n\n\n Интересный факт: {snake_facts[randint(0, len(snake_facts)-1)]}",
+            text=f"""
+            🎬 Игра начнется через 6 секунд 🎬\n\n\n\n\n Интересный факт: {snake_facts[randint(0, len(snake_facts)-1)]}
+            """,
             font=("Courier", 12),
             bg="black",
             fg="white",

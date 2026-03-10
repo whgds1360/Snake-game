@@ -6,6 +6,7 @@ from utils.Move import Move
 from PIL import Image, ImageTk
 from pathlib import Path
 from typing import Final, final, ClassVar
+from loguru import logger
 
 
 @final
@@ -41,6 +42,7 @@ class Game:
         Инициализация размеров из настроек
         и просчет отступов и размеров в клетках
         """
+        logger.debug("Инициализирую размеры окна")
         cls.window_width = settings.width
         cls.window_height = settings.height
         cls.game_width = settings.width_game_place
@@ -91,6 +93,7 @@ class Game:
 
     @classmethod
     def render_game_score(cls, canvas) -> None:
+        logger.debug("Рендерю игровой счет")
         # Игровой счет
         canvas.create_text(
             cls.side_indent + 95,  # X координата (слева с отступом)
@@ -106,8 +109,8 @@ class Game:
         """
         Обновляет счет игры
         """
+        logger.debug("Обновляю игровой счет")
         cls.game_score = food.eat_count
-
 
         # Удаляем старый текст счета, если он есть
         canvas.delete("score_text")
@@ -119,6 +122,7 @@ class Game:
         """
         Рендер самой игры
         """
+        logger.debug("Рендерю игру")
         cls.__initialize(settings)
 
         # Загружаем изображение
@@ -151,7 +155,6 @@ class Game:
         # Рендеринг рамки игрового поля
         cls.game_place_rendering(canvas=canvas, settings=settings)
 
-
         # Игровой счет
         cls.render_game_score(canvas=canvas)
 
@@ -165,6 +168,7 @@ class Game:
         """
         Игровой цикл с проверкой победы/поражения
         """
+        logger.debug("Запускаю игровой цикл")
         from scenes.LoseScreen import LoseScreen
         from scenes.WinScreen import WinScreen
 

@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from pathlib import Path
 from typing import Final, final, ClassVar
 from scenes.Menu import Menu
+from loguru import logger
 
 
 @final
@@ -17,8 +18,9 @@ class LoseScreen(Menu):
     @classmethod
     def screen_rendering(cls, window, settings) -> None:
         """
-        Метод просто отрисовывает меню с кнопками
+        Метод просто отрисовывает экран проигрыша
         """
+        logger.debug("Рендерю меню счет")
         # Загружаем фоновое изображение
         lose_screen_image = Image.open(cls.IMAGE_LOSE_SCREEN)
         lose_screen_image = lose_screen_image.resize((settings.width, settings.height))

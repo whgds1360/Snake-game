@@ -1,5 +1,6 @@
 from typing import final, List
 from random import randint
+from loguru import logger
 
 
 @final
@@ -10,10 +11,10 @@ class Food:
 
         self.space_size: int = settings.space_size
         self.canvas = canvas
-        self.food_color:str = settings.food_color
+        self.food_color: str = settings.food_color
 
         # Игровой счет
-        self.eat_count:int = 0
+        self.eat_count: int = 0
 
         # Список координат еды
         self.coord: List[List[int]] = []
@@ -51,6 +52,7 @@ class Food:
 
         # Удаление старой еду
         if self.coord:
+            logger.debug("Удаляю старую еду и генерю новую")
             self.canvas.delete(self.squares[-1])
             self.coord.clear()
             self.squares.clear()
