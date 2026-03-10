@@ -115,7 +115,7 @@ class Resources(BaseModel):
 
             return items
 
-        # На всякий случай
+        # На всякий случай если сверху пойдет что - то не так
         return []
 
     @classmethod
