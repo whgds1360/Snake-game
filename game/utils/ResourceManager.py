@@ -1,8 +1,9 @@
 from __future__ import annotations
 from configparser import ConfigParser
-from typing import final, Final, ClassVar, Dict, List
 from pathlib import Path
-from pydantic import BaseModel, field_validator, Field, model_validator
+from typing import Dict, Final, final, List
+from loguru import logger
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 @final
@@ -11,15 +12,21 @@ class Resources(BaseModel):
     Получение базовых настроек
     """
 
+    model_config = ConfigDict(
+        extra="ignore",  # действие при передаче лишних полей
+        frozen=True,  # Запрет на изменение экземлпяра
+        validate_default=True,  # Валидация дефолтных значений
+    )
+
     # Константы
-    DEFAULT_CONFIG_NAME: ClassVar[Final[str]] = "Config.ini"
+    DEFAULT_CONFIG_NAME: Final[str] = "Config.ini"
 
     # Базовые настройки окна
     width: int = Field(default=1024, repr=True, init=True)
     height: int = Field(default=768, repr=True, init=True)
     resizable: bool = Field(default=False, repr=True, init=True)
     title: str = Field(default="Snake Game", repr=True, init=True)
-    icon_path: str = Field(
+    icon_path: Path = Field(
         default=Path("assets", "icon", "app_icon.ico"), repr=True, init=True
     )
 
@@ -63,7 +70,7 @@ class Resources(BaseModel):
     def validate_space_size(self) -> Resources:
         if self.width % self.space_size != 0 or self.height % self.space_size != 0:
             raise ValueError(
-                """    Введен некорректный размер игрового поля!!!
+                """                 Введен некорректный размер игрового поля!!!
 
                                                 Обратите внимание!!!
                                 Ширина и высота окна должны делиться на размер сетки!!!
@@ -84,6 +91,33 @@ class Resources(BaseModel):
             raise ValueError("Высота игрового поля превышает размеры окна!")
         return self
 
+    @field_validator("snake_facts", mode="before")
+    @classmethod
+    def parse_snake_facts(cls, value):
+        """
+        Превращаем строку из конфига в список строк.
+        Если уже список, то оставляем как есть.
+        """
+        if isinstance(value, list):
+            return value
+
+        if isinstance(value, str):
+            # Если строка не пришла из конфига
+            if not value.strip():
+                return []
+
+            # Разделяем по запятым
+            items = [item.strip() for item in value.split(";") if item.strip()]
+
+            # Если после разделения ничего нет
+            if not items:
+                return []
+
+            return items
+
+        # На всякий случай если сверху пойдет что - то не так
+        return []
+
     @classmethod
     def from_config_file(cls, config_file: str = DEFAULT_CONFIG_NAME) -> Resources:
         """Создать конфигурацию из файла"""
@@ -92,40 +126,46 @@ class Resources(BaseModel):
         config_path: Path = Path(config_file)
         # Проверка существования файла
         if not config_path.exists():
-            print(f"Файл конфига {config_path} не найден")
+            logger.error(f"Файл конфига {config_path} не найден")
             return cls()  # Возвращаем конфиг со значениями по умолчанию
 
+        logger.debug("Начинаю чтение конфига")
         # Чтение конфига
         try:
             config_parser.read(config_file, encoding="utf-8")
         except UnicodeError:
+            logger.exception("Ошибка кодировки при чтении конфига")
             config_parser.read(config_file)
         except PermissionError:
-            print(f"Недостаточно прав для открытия конфигурационного файла!")
+            logger.exception("Недостаточно прав для открытия конфигурационного файла!")
         except Exception as error:
-            print(f"Возникла ошибка:{error} при работе с конфигурационным файлом!")
+            logger.exception(
+                f"Возникла ошибка:{error} при работе с конфигурационным файлом!"
+            )
 
         # Отладочная печать
         if "Settings window" in config_parser:
-            print("📋 Найдены ключи:", list(config_parser["Settings window"].keys()))
+            logger.debug(
+                f"📋 Найдены ключи: {list(config_parser['Settings window'].keys())}"
+            )
 
         if "Gameplay settings" in config_parser:
-            print("📋 Найдены ключи:", list(config_parser["Gameplay settings"].keys()))
+            logger.debug(
+                f"📋 Найдены ключи:, {list(config_parser['Gameplay settings'].keys())}"
+            )
 
         if "Game place settings" in config_parser:
-            print(
-                "📋 Найдены ключи:", list(config_parser["Game place settings"].keys())
+            logger.debug(
+                f"📋 Найдены ключи:, {list(config_parser['Game place settings'].keys())}"
             )
         if "Other" in config_parser:
-            print(
-                "📋 Найдены ключи:", list(config_parser["Other"].keys())
-            )
+            logger.debug(f"📋 Найдены ключи:, {list(config_parser['Other'].keys())}")
 
         # Путь до иконки
         path_icon: Path = Path("assets", "icon", "app_icon.ico")
         if not path_icon.exists():
-            print("Иконка не найдена")
-            print(f"Путь поиска: {path_icon}")
+            logger.error("Иконка не найдена")
+            logger.error(f"Путь поиска: {path_icon}")
 
         # Извлечение значений
         base_settings: Dict[str, str] = dict(
@@ -141,27 +181,9 @@ class Resources(BaseModel):
             config_parser.items("Other")
         )  # как словарь
 
-        return cls(
-            # Базовые настройки окна
-            width=int(base_settings.get("width", 1024)),
-            height=int(base_settings.get("height", 768)),
-            resizable=base_settings.get("resizable", "False") == "True",
-            title=str(base_settings.get("title", "Snake Game")),
-            icon_path=str(place_settings.get("path_icon", path_icon)),
-            # Базовые настройки игры
-            delay=int(game_settings.get("delay", 200)),
-            snake_color=str(game_settings.get("snake_color", "green")),
-            food_color=str(game_settings.get("food_color", "red")),
-            # Настройки игрового поля
-            space_size=int(place_settings.get("space_size", 32)),
-            width_game_place=int(place_settings.get("width_game_place", 640)),
-            height_game_place=int(place_settings.get("height_game_place", 640)),
-            color_field_game_place=str(
-                place_settings.get("color_field_game_place", "pink")
-            ),
-            # Прочие настройки
-            snake_facts=list(map(str, other_settings.get("snake_facts", []).split(';')))
-        )
+        data = {**base_settings, **game_settings, **place_settings, **other_settings}
+
+        return cls.model_validate(data)
 
 
 @final
@@ -169,6 +191,8 @@ class ResourceManager:
     """
     Класс для подгрузки базовых настроек окна и настроек игрового поля
     """
+
+    logger.debug("Начинаю подгрузку базовых настроек окна")
 
     @staticmethod
     def load_base_settings_for_window(window, base_settings) -> None:

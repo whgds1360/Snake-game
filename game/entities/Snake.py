@@ -1,9 +1,11 @@
 from typing import List, final
+from loguru import logger
 
 
 @final
 class Snake:
     def __init__(self, canvas, settings) -> None:
+        logger.debug("Рендерю змею")
         # Для выравнивания змейки по центру окна
         width: int = settings.width // 2
         height: int = settings.height // 2

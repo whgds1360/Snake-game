@@ -3,6 +3,7 @@ from tkinter import Canvas
 from PIL import Image, ImageTk
 from pathlib import Path
 from typing import Final, final
+from loguru import logger
 
 
 @final
@@ -15,6 +16,7 @@ class LoadScreen:
         """
         Метод просто отрисовывает загрузочный экран
         """
+        logger.debug("Отрисовываю загрузочный экран")
         # Загружаем фоновое изображение
         background_image_menu = Image.open(cls.IMAGE_LOAD_SCREEN)
         background_image_menu = background_image_menu.resize(
@@ -41,7 +43,7 @@ class LoadScreen:
         """
         Метод вызывает функцию отрисовки меню после загрузочного экрана
         """
-        from game.scenes.Menu import Menu
+        from scenes.Menu import Menu
 
         # Очищаем экран для заставки
         for widget in window.winfo_children():

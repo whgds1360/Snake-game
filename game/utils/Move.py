@@ -1,4 +1,5 @@
 from typing import ClassVar, final
+from loguru import logger
 
 
 @final
@@ -12,7 +13,7 @@ class Move:
         Метод меняет направление змеи в зависимости от нажатой кнопки
         """
         # Отладочная печать
-        print(f"Нажата клавиша: {event.keysym}")
+        logger.debug(f"Нажата клавиша: {event.keysym}")
 
         if event.keysym == "Right":
             if cls.current_direction == "Left":

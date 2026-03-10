@@ -1,11 +1,12 @@
 from __future__ import annotations
 from tkinter import Canvas
-from game.entities.Food import Food
-from game.entities.Snake import Snake
-from game.utils.Move import Move
+from entities.Food import Food
+from entities.Snake import Snake
+from utils.Move import Move
 from PIL import Image, ImageTk
 from pathlib import Path
 from typing import Final, final, ClassVar
+from loguru import logger
 
 
 @final
@@ -41,6 +42,7 @@ class Game:
         Инициализация размеров из настроек
         и просчет отступов и размеров в клетках
         """
+        logger.debug("Инициализирую размеры окна")
         cls.window_width = settings.width
         cls.window_height = settings.height
         cls.game_width = settings.width_game_place
@@ -106,8 +108,8 @@ class Game:
         """
         Обновляет счет игры
         """
+        logger.debug("Обновляю игровой счет")
         cls.game_score = food.eat_count
-
 
         # Удаляем старый текст счета, если он есть
         canvas.delete("score_text")
@@ -119,6 +121,7 @@ class Game:
         """
         Рендер самой игры
         """
+        logger.debug("Рендерю игру")
         cls.__initialize(settings)
 
         # Загружаем изображение
@@ -151,7 +154,6 @@ class Game:
         # Рендеринг рамки игрового поля
         cls.game_place_rendering(canvas=canvas, settings=settings)
 
-
         # Игровой счет
         cls.render_game_score(canvas=canvas)
 
@@ -165,8 +167,8 @@ class Game:
         """
         Игровой цикл с проверкой победы/поражения
         """
-        from game.scenes.LoseScreen import LoseScreen
-        from game.scenes.WinScreen import WinScreen
+        from scenes.LoseScreen import LoseScreen
+        from scenes.WinScreen import WinScreen
 
         # Проверка поражения
         if cls.check_lose(snake):

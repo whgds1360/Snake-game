@@ -10,10 +10,10 @@ class Food:
 
         self.space_size: int = settings.space_size
         self.canvas = canvas
-        self.food_color:str = settings.food_color
+        self.food_color: str = settings.food_color
 
         # Игровой счет
-        self.eat_count:int = 0
+        self.eat_count: int = 0
 
         # Список координат еды
         self.coord: List[List[int]] = []
@@ -26,7 +26,7 @@ class Food:
         """
         Создает новую еду в случайном месте внутри игрового поля
         """
-        from game.scenes.Game import Game
+        from scenes.Game import Game
 
         # Границы игрового поля в ПИКСЕЛЯХ
         left = Game.side_indent  # левая граница (например 192)
