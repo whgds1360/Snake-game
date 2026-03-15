@@ -15,7 +15,7 @@ def main():
     # Подгрузка настроек
     settings: Resources = Resources.from_config_file()
   
-    #Подгрузка базовых настроек окна
+    # Подгрузка базовых настроек окна
     ResourceManager.load_base_settings_for_window(window=window, base_settings=settings)
 
     # Рендер загрузочного экрана

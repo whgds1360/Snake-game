@@ -1,7 +1,7 @@
 from __future__ import annotations
 from configparser import ConfigParser
 from pathlib import Path
-from typing import Dict, Final, final, List
+from typing import Dict, Final, final, List, Optional
 from loguru import logger
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -42,7 +42,7 @@ class Resources(BaseModel):
     color_field_game_place: str = Field(default="pink", repr=True, init=True)
 
     # Прочие настройки
-    snake_facts: List[str] = Field(default=[], repr=True, init=True)
+    snake_facts: Optional[List[str]] = Field(default=[], repr=True, init=True)
 
     @field_validator("width")
     @classmethod
