@@ -16,7 +16,7 @@
 ## 📸 Скриншоты
 
 ### Игровой процесс
-<img src="screenshots/app_video.gif" alt="App video demo" width="1024" height="500">
+<img src="screenshots/app_video.gif" alt="App video demo" width="1024" height="755">
 
 ### Экран меню
 ![Menu](screenshots/menu.png)
