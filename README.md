@@ -127,3 +127,10 @@ pip install nuitka
 #Обратите внимание, что вы находитесь в директории игры в основной папке game!
 nuitka --standalone --onefile --enable-plugin=tk-inter --include-data-dir=utils=utils --include-data-dir=entities=entities --include-data-dir=scenes=scenes --include-data-dir=assets=assets --include-data-file=config.ini=config.ini main.py
 ```
+
+### Docker image
+#### Дополнительно я поднял Docker образ и запушил к себе на Docker hub. Можете скачать этот образ ниже!
+1. **Установка Docker image:**
+```bash
+docker pull whgds1360/snake-game
+```
